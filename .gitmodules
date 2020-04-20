@@ -1,0 +1,3 @@
+[submodule "pages/react-calculator"]
+	path = pages/react-calculator
+	url = https://github.com/SmalltalkLand/react-calculator.git
