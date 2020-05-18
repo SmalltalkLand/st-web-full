@@ -1,0 +1,8 @@
+<svg style="position: absolute; top: -99999px" xmlns="http://www.w3.org/2000/svg">
+  <filter id="index">
+    <feComponentTransfer>
+    <feFuncR slope = "0.9" intercept="0.3"></feFuncR>
+        <feFuncB slope = "0.7" intercept="0.5"></feFuncB>
+    </feComponentTransfer>
+  </filter>
+</svg>

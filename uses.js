@@ -31,3 +31,16 @@ export function usePrevious(value) {
     return ref.current;
 
 }
+export function useMock(obj,name,valueCreator){
+
+    useEffect(() => {
+let old = Object.getOwnPropertyDescriptor(obj,name);
+Object.defineProperty(obj,name,{value: valueCreator(obj[name])});
+
+return () => {
+Object.defineProperty(obj,name,old)
+
+}
+
+    },[obj,name,value])
+}

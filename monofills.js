@@ -1,4 +1,5 @@
 import React from 'react'
+Object.defineProperty = (o => (...args) => {try{return o(...args)}catch(err){}})(Object.defineProperty)
 try { var self_ = self; } catch (err) { var self_ = global }
 //self_.Symbol = new Proxy(self_.Symbol, { construct: (o, args, t) => Function.prototype.apply.call(o, t, args) })
 React.createElement = (old => (...args) => ((React.createElement.handlers || []).slice().reverse().reduce((acc, cur) => cur(acc), old))(...args))(React.createElement);

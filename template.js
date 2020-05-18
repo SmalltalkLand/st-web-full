@@ -1,0 +1,2 @@
+let f2;
+export default f2 = obj => {let f = params => (typeof obj === 'object' ? {...new Proxy(obj,{get: (o,k) => o.type === 'literal' ? f2(o.data[k])(params) : o.type === 'ref' ? f2(params[o.data])((ot => {delete ot[o.data]; return ot})({...params})) : undefined})} : obj); return f}

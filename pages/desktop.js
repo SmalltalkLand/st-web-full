@@ -1,10 +1,11 @@
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Observable } from 'rxjs';
 import { publish } from 'rxjs/operators'
 import { create } from 'web-worker-proxy'
 import swal from 'sweetalert';
 import {pipe,identity} from 'ramda'
+import interact from 'interactjs'
 import { useAsync } from "react-async"
 import {andThen} from 'ramda'
 import createSelf from '../createSelf.js'
@@ -34,7 +35,9 @@ import { useAllNodes, useBetterMutationObserver } from '../umo.js'
 import wip from '../wip-alert.js'
 import IoComponent from '../links/io.js'
 import {locale} from '../loc/index.js'
-
+//import Calculator from './Calculator.js'
+import * as stream from 'stream'
+try{self.addEventListener('DOMContentLoaded',() => self.postMessage({type: 'setHostname',data: Object.assign({},location.hostname)}))}catch(err){}
 let jp, CashElement, $;
 let os;
 try { os = self } catch (err) { }
@@ -57,7 +60,7 @@ React.createElement.handlers = [macro, nevts];
 Object.defineProperty(self, `desk_locale$${Math.random()}`, { get: () => locale, set: v => locale = v });
 export let exs = {};
 export function SetExs(exs_) { exs = exs_ }
-Object.defineProperty(self, `desk_exs$${Math.random()}`, {get: () => exs,set: SetExs})
+Object.defineProperty(self, `desk_exs$${Math.random()}`, {get: () => exs,set: SetExs});
 (async () => {
     try { $ = await import('cash-dom').default;[jp, CashElement] = $plugin($); React.createElement.handlers.push(jp); } catch (err) { } })();
 let dw = [{ render: (desk, api) => (<div></div>) }];
@@ -78,14 +81,23 @@ let dism = Dism(MyDism);
 let pp, pppp;
 try { pp = parent?.parent } catch (err) { };
 try { pppp = pp?.parent?.parent } catch (err) {}
+let dropzone = opts => interact => interact.dropzone({...opts});
 export async function getServerSideProps(context) {
     return {
         props: {}, // will be passed to the page component as props
     }
 }
+let mcache = {};
+let __require = m => {
+
+return mcache[m]
+}
+let attempt = (f,h) => (...args) => {try{return f(...args)}catch(err){return h(err,...args)}}
 export default props => {
     let [windows, setWindows] = useState([]);
     setWindows = pipe(w => windows = w, setWindows);
+    let el_require = props.el_require || __require;
+    useEffect(() => {},[el_require]);
     function wtraceObservable({ getWindows, setWindows }) {
         return new Observable(s => {
             setWindows(getWindows().concat([{
@@ -121,6 +133,8 @@ export default props => {
     try { var pp = parent?.parent } catch (err) { var pp = null };
     useEventListener('oobestart', evt => { setOOBEStage(0); }, pp);
     useEventListener('message', evt => { });
+    let jl;
+    useEffect(() => { let k, pk;try{self[k = `st-java-link-${pk = Math.random()}`] = jl; }catch(err){return;};swal(`Key: ${pk}`); return () => {delete self[k]}},[useMemo(() => jl,[])])
     let cw = w => () => { setWindows(windows.filter(nw => nw !== w)); };
     let rw = w => (<div key={w.title}><Hook hook={useState} hookArgs={[false]}>{([minimized, setMinimized]) => <Window onClose={cw(w)} miminized={minimized} setMinimized={setMinimized} winMenuBarArea={DynProxy(() => titleWin.current)} title={(oobeStage === OOBENULL || oobeStage === OOBEEXTERNAL ? '' : loc('#OOBE#')) + w.title}>{w.render(props, { windows, setWindows, rw })}</Window>}</Hook></div>);
     let oobestages = [<div>
@@ -176,10 +190,16 @@ export default props => {
     let [shNodes, setShNodes] = useState([]);
     let exnodes;
     try { [exnodes] = (props.ex ? useAllNodes : useState.bind(null, []))(document.body); } catch (err) { };
+    useEffect(() => {if(exnodes?.length){
+
+
+    }},[exnodes])
+    jl = useMemo(() => ({}),[]);
     return (md(<Hook hook={useState}>{([presence, setPresence]) => <div ref={elem => {
         if(elem)elem.desktop = true
     }} onEventHalo={setHEvt}>
         <IoComponent>{socket => (<>
+        <div ref = {attempt(pipe(interact,dropzone({accept: '.ex-thing'})),err => {})}>
             {locale === 'he' && (<Hook hook={useAsync} hookArgs={[{ promiseFn: props => import('./hebe-desktop.js') }]}>{({ data }) => data && (Hebes => <Hebes></Hebes>)(data)}</Hook>)}
             {props.url && (<Window><DoubleIframe src={'/proxy/' + props.url} secondRef={pipe(w => w.contentWindow, w => {
                 let stElem = w.document.querySelector('st') || w.document.createElement('div');
@@ -202,9 +222,25 @@ export default props => {
             setHEvt(hevt = null);
             if (!evt) return;
             hof && hof(evt);
-        }, hevt]}>{() => null}</Hook>
+            let target = evt.recursiveTarget || evt.target;
+            let old = target.style?.backgroundColor;
+            (target.style || (target.style = {})).backgroundColor = "yellow";
+            setTimeout(() => {target.style.backgroundColor = old; if(old === undefined)delete target.style.backgroundColor;},200)
+        }, [hevt,hof]]}>{() => null}</Hook>
         <Macro macro={caffieneMacro(CashElement)}></Macro>
-            {oobeStage === OOBENULL || oobeStage === OOBEEXTERNAL ? (<><div ref={e => { if (props?.exTitleRef?.current && e) props.exTitleRef.current.appendChild(e) }}><span ref={titleWin}></span><span classList={['st-bar', props.ex || 'host']} ref={shost}>{shost.current && (<Hook hook={useAllNodes} hookArgs={[shost.current || document.createElement('span')]}>{([nodes]) => { setShNodes(nodes); return null }}</Hook>)}</span><button onClick={activate.bind(null, sid)}>{loc('Start')}</button><button onClick={activate.bind(null, mid)}>{'v'}</button></div>
+            {oobeStage === OOBENULL || oobeStage === OOBEEXTERNAL ? (<>
+            <div ref={e => { if (props?.exTitleRef?.current && e) props.exTitleRef.current.appendChild(e) }}>
+            <span ref={titleWin}></span>
+            <span classList={['st-bar', props.ex || 'host']} ref={shost}>
+            {shost.current && (<Hook hook={useAllNodes} hookArgs={[shost.current || document.createElement('span')]}>{([nodes]) => { setShNodes(nodes); return null }}</Hook>)}
+            </span>
+            <button onClick={activate.bind(null, sid)}>{loc('Start')}</button>
+            <button onClick={activate.bind(null, mid)}>{'v'}</button>
+            {(calc,cbref = useRef()) => (<>
+            <button onClick = {useMemo(() => () => setWindows(windows.concat([{title: 'Calculator',render: () => {calc = true; return (<Calculator bref = {cbref}></Calculator>)}}])),[windows])}></button>
+            {useMemo(() => (<><span ref = {cbref}></span></>),[calc,Math.random()])}
+            </>)()}
+            </div>
             <Menu id={sid} title={loc('Start')} items={[]}></Menu>
                 <Menu id={mid} title={loc('Global Menu')} items={[{ title: loc('Start'), onClick: activate.bind(null, sid) }, {
                     title: loc('All nodes'), onClick: () => setWindows(windows.concat([{
@@ -254,6 +290,7 @@ export default props => {
             </div>, document.querySelector('#main-toolbar'))}
         </SugarShare>}</Hook>)}
         {oobeStage === OOBEEXTERNAL ? (<Window title={loc('oobe')}><Hook hook={useState} hookArgs={[false]}>{([wprepStage, setWprepStage]) => wprepStage ? (<><DoubleIframe src={'/desktop'}></DoubleIframe><Hook hook={useState} hookArgs={[false]}>{([oobelock, setOOBELock]) => oobelock || (<><button onClick={() => { setWprepStage(false); self.dispatchEvent(new Event('stopoobe')); }}> {loc('Stop oobe')}</button><button onClick={() => setOOBELock(true)}>{loc('hide controls for oobe')}</button></>)}</Hook></>) : (<button onClick={() => { setWprepStage(true); self.dispatchEvent(new Event('startoobe')); }}>{loc('Start oobe')}</button>)}</Hook></Window>) : (<></>)}
-    </>)}</IoComponent>
+</div></>)}
+    </IoComponent>
             </div>}</Hook>));
 }

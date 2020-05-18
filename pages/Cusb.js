@@ -28,6 +28,7 @@ export default props => {
         }
     }
     useEffect(() => {
+        if(!win)return;
         let oldFunc = win.Function;
         let sts = Math.random();
         let get;
@@ -40,7 +41,7 @@ export default props => {
 
         }
     }, [win]);
-    useBetterMutationObserver(win.document, ml => {
+    try{useBetterMutationObserver(win.document, ml => {
         ml.forEach(m => {
             m.addedNodes.filter(n => n instanceof win.TextNode).forEach(n => {
                 let content = n.textContent;
@@ -49,7 +50,7 @@ export default props => {
                 utterance.lang = win.lang || 'en';
             })
         });
-    })
+    })}catch(err){}
     return (<>
         <input type="text" value={curl} onChange={pipe(evt => evt.target.value, v => { setCurl(v); return v },debounce(setUrl,2000))}></input>
         <DoubleIframe src={'/proxy/' + url} secondRef={pipe(w => w?.contentWindow, setWin)}></DoubleIframe>

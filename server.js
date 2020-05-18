@@ -69,6 +69,7 @@ let Myurl = 'localhost:3000';
 let Extension = filename => filename.split('.').pop();
 let loginRegexs = [];
 app.prepare().then(() => {
+    require('./chat/app.js');
     let s;
     let hebes;
     if (process.env.HEBES) {

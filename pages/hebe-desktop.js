@@ -9,9 +9,9 @@ let hetable = {
 
 };
 try { pp = parent.parent } catch (err) { };
-let defprop = (tf,...args,ff) => {
-    Object.defineProperty(tf(self), ...args,ff(self));
-    if (pp) Object.defineProperty(tf(pp), ...args,ff(self));
+let defprop = (tf,...args) => {
+    Object.defineProperty(tf(self), ...args.slice(0,args.length - 1),args[args.length](self));
+    if (pp) Object.defineProperty(tf(pp), ...args.slice(0,args.length - 1),args[args.length](self));
 
 }
 defprop(x => x, 'hetable', x => ({get: () => hetable}))
