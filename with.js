@@ -1,0 +1,1 @@
+export default (obj,code) => (new Function('obj, code','with(obj)return new Function(code)'))(obj,code)

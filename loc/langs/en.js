@@ -1,0 +1,1 @@
+export default new Proxy({}, {get: (o,k) => o[k] || k,has: (o,k) => true})

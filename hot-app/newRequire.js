@@ -1,0 +1,2 @@
+import hot_eval from './hotEval.js'
+export default old => (...args) => { let key = args[0]; if (key.startsWith('st-app-')) { let appName = key.replace('st-app-', ''); return fetch(appName).then(res => res.text()).then(hot_eval) }; return old(...args) }

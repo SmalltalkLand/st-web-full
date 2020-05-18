@@ -1,0 +1,1 @@
+export default props => props.children(...props.hooks.map(h => h.f(...h.args)))

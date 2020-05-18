@@ -1,3 +1,6 @@
 [submodule "pages/react-calculator"]
 	path = pages/react-calculator
 	url = https://github.com/SmalltalkLand/react-calculator.git
+[submodule "collide"]
+	path = collide
+	url = https://github.com/SmalltalkLand/collide.git
