@@ -46,6 +46,9 @@ return () => {
 
 }
 },[nodes]);
-return props.children({setEmoji});
+let dsplugin = useMemo(() => f => html => {
+return (html.split('').reduce(async (acc,v) => (async i => i ? (await acc) + (i.key) : await acc)(await ime({key: v})),Promise.resolve(''))).then(f);
+},[ime]);
+return props.children({setEmoji,dsplugin});
 
 }
