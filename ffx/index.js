@@ -13,8 +13,9 @@ import * as MyMorphs from '../pages/Morph.js'
 import Hook from '../components.generic/Hook.js'
 import {useAllNodes, allChildren} from '../umo.js'
 import Hook from '../components.generic/Hook.js'
-import { useAsync } from "react-async"
+import { useAsync, neverSettle } from "react-async"
 import RemoteInput from '../components.dom/RemoteInput.js';
+import InputTools from '../components.dom/InputTools.js'
 import template from '../template.js'
 let draggable = opts => i => i.draggable(opts);
 try{
@@ -82,7 +83,10 @@ let om = evt => {
     };
 };
 useHaloKit(useMemo(() => evt => (henabled || (MyNodes && MyNodes.includes(evt.target))) && evt.button === 1,[henabled,MyNodes]));
-    return (<div ref = {ref}>
+    return (
+       <InputTools>{a => (
+    <div ref = {useMemo(() => e => {ref.current = e; a[0](e);},[ref,a[0]])}>
+    <input ref = {pipe(i => {i.focus(); i.value = Math.random().toString(); i.blur();return i},a[1])} style = {{display: 'none'}} type = "text"></input>
     {hisp && !hh ? null : (<div>
     <Hook hook = {useEventListener} hookArgs={['message',om]}>{() => null}</Hook>
     {(s => <RemoteInput src = {s} type = "number" value = {rate} onChange = {evt => {setRate(evt.target.value)}}></RemoteInput>)(hh.replace('/desktop','/rate'))}
@@ -94,7 +98,7 @@ useHaloKit(useMemo(() => evt => (henabled || (MyNodes && MyNodes.includes(evt.ta
     {denabled && (ReactDOM.createPortal(<div><Window>{(Desktop => <Desktop ex = {true} el_require = {el_require}></Desktop>)(desktop)}</Window></div>,cid('st-desktop','div')))}
     <button onClick = {() => {Promise.resolve(desktop || import('../pages/desktop.js').then(m => setDesktop(m.default))).then(()  => {setDEnabled(true)})}}>Desktop</button></div>)}
 </span>
-    </div>)
+    </div>)}</InputTools>)
 }
 ReactDOM.render(<App></App>,d);
 document.body.appendChild(d);

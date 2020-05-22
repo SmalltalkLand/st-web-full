@@ -4,3 +4,6 @@
 [submodule "collide"]
 	path = collide
 	url = https://github.com/SmalltalkLand/collide.git
+[submodule "algebra.js"]
+	path = algebra.js
+	url = https://github.com/SmalltalkLand/algebra.js.git

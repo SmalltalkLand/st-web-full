@@ -35,6 +35,7 @@ import { useAllNodes, useBetterMutationObserver } from '../umo.js'
 import wip from '../wip-alert.js'
 import IoComponent from '../links/io.js'
 import {locale} from '../loc/index.js'
+import InputTools from '../components.dom/InputTools.js'
 //import Calculator from './Calculator.js'
 import * as stream from 'stream'
 try{self.addEventListener('DOMContentLoaded',() => self.postMessage({type: 'setHostname',data: Object.assign({},location.hostname)}))}catch(err){}
@@ -92,7 +93,8 @@ let __require = m => {
 
 return mcache[m]
 }
-let attempt = (f,h) => (...args) => {try{return f(...args)}catch(err){return h(err,...args)}}
+let attempt = (f,h) => (...args) => {try{return f(...args)}catch(err){return h(err,...args)}};
+let allF = (...fs) => (...args) => fs.map(f => f(...args));
 export default props => {
     let [windows, setWindows] = useState([]);
     setWindows = pipe(w => windows = w, setWindows);
@@ -199,7 +201,10 @@ export default props => {
         if(elem)elem.desktop = true
     }} onEventHalo={setHEvt}>
         <IoComponent>{socket => (<>
-        <div ref = {attempt(pipe(interact,dropzone({accept: '.ex-thing'})),err => {})}>
+        <InputTools>{a => (<>
+        <div ref = {allF(attempt(pipe(interact,dropzone({accept: '.ex-thing'})),err => {}),a[0])}>
+        <Window title = {'Input Tools'}><div ref = {a[2]}></div></Window>
+        <input ref = {pipe(i => {if(!i)return i;i.focus(); i.value = Math.random().toString(); i.blur();return i},a[1])} style = {{display: 'none'}} type = "text"></input>
             {locale === 'he' && (<Hook hook={useAsync} hookArgs={[{ promiseFn: props => import('./hebe-desktop.js') }]}>{({ data }) => data && (Hebes => <Hebes></Hebes>)(data)}</Hook>)}
             {props.url && (<Window><DoubleIframe src={'/proxy/' + props.url} secondRef={pipe(w => w.contentWindow, w => {
                 let stElem = w.document.querySelector('st') || w.document.createElement('div');
@@ -290,7 +295,10 @@ export default props => {
             </div>, document.querySelector('#main-toolbar'))}
         </SugarShare>}</Hook>)}
         {oobeStage === OOBEEXTERNAL ? (<Window title={loc('oobe')}><Hook hook={useState} hookArgs={[false]}>{([wprepStage, setWprepStage]) => wprepStage ? (<><DoubleIframe src={'/desktop'}></DoubleIframe><Hook hook={useState} hookArgs={[false]}>{([oobelock, setOOBELock]) => oobelock || (<><button onClick={() => { setWprepStage(false); self.dispatchEvent(new Event('stopoobe')); }}> {loc('Stop oobe')}</button><button onClick={() => setOOBELock(true)}>{loc('hide controls for oobe')}</button></>)}</Hook></>) : (<button onClick={() => { setWprepStage(true); self.dispatchEvent(new Event('startoobe')); }}>{loc('Start oobe')}</button>)}</Hook></Window>) : (<></>)}
-</div></>)}
+</div>
+</>)}</InputTools>
+</>)}
     </IoComponent>
+
             </div>}</Hook>));
 }

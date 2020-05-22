@@ -5,6 +5,8 @@ import { Menu, activate } from './Menu.js'
 import useLoc from '../loc/use.js'
 import '../ico.js'
 import swal from 'sweetalert'
+import wpipe, {wrapper} from '../wpipe.js'
+let cf = f => wpipe(wrapper(f),f2 => v => v.replacement ? v.replacement({...v,replacement_old: f2}) : f2(v));
 export let themes = {
     default: new Proxy({}, { get: (o, k) => o[k] || k }),
     expiremental: new Proxy({ O: 'ㅁ', 'X': 'א','-': '⼇'}, {get: (o,k) => o[k] || k}),
@@ -13,12 +15,12 @@ export let themes = {
 };
 themes.ico.wrappedTheme[0] = themes.default;
 let MyTheme= themes.default;
-let ThemeInit = props => {
+let ThemeInit = cf(props => {
     let [num,setNum] = useState();
 return (<div>{Object.keys(themes).map(k => [k,themes[k]]).map(([k,v]) => (<div onClick = {() => {MyTheme = v; MyTheme.wrappedTheme && MyTheme.wrappedTheme.map((v,i) => swal(`SubTheme ${i} for ${k}`,{content: 'input'}).then(result => themes[result])); setNum(Math.random())}}>{k}</div>))}</div>)
 
-}
-export default props => {
+});
+export default cf(props => {
     let loc = useLoc();
     let [tabIndex, setTabIndex] = useState(0 );
     let [isMaximized, setIsMaximized] = useState(false); let [ms, setMS] = useState(() => Symbol());let Draggable = props.Draggable || Draggable_; let theme = props.theme ||  MyTheme;return (
@@ -45,4 +47,4 @@ export default props => {
                 </div>) : props.tabs ? props.tabs[tabIndex].value : props.children}</div>
             </div>
         </Draggable>)
-}
+});
